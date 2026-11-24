@@ -91,14 +91,14 @@ def make_gif(columns, points, width, height, cell, gap, left, top):
             draw.rounded_rectangle((x,y,x+cell,y+cell), radius=2,
                                    fill=day["color"] or "#161b22")
     draw.line(points, fill="#25313c", width=2, joint="curve")
-    frames, car = [], draw_car()
+    frames, car = [], draw_car().resize((30, 17), Image.Resampling.LANCZOS)
     for x, y, angle in sample_route(points, 72):
         frame = bg.copy().convert("RGBA")
         rotated = car.rotate(angle, resample=Image.Resampling.BICUBIC, expand=True)
         frame.alpha_composite(rotated, (int(x-rotated.width/2), int(y-rotated.height/2)))
         frames.append(frame.convert("P", palette=Image.Palette.ADAPTIVE))
     frames[0].save(OUT/"f1-race.gif", save_all=True, append_images=frames[1:],
-                   duration=90, loop=0, optimize=True, disposal=2)
+                   duration=270, loop=0, optimize=True, disposal=2)
 
 def make_svg(columns, points, width, height, cell, gap, left, top):
     rects = []
@@ -115,7 +115,7 @@ def make_svg(columns, points, width, height, cell, gap, left, top):
  <g>{''.join(rects)}</g>
  <path id="racePath" d="{path_d}" fill="none" stroke="#263746" stroke-width="2"/>
  <g>
-  <g transform="translate(-21,-12)">
+  <g transform="translate(-14.7,-8.4) scale(0.7)">
    <rect x="2" y="8" width="38" height="8" rx="4" fill="#d71920" stroke="#ff7777"/>
    <rect x="16" y="8" width="9" height="8" rx="3" fill="#20232a"/>
    <rect x="5" y="5" width="8" height="4" rx="1" fill="#171717"/>
@@ -124,7 +124,7 @@ def make_svg(columns, points, width, height, cell, gap, left, top):
    <rect x="31" y="15" width="8" height="4" rx="1" fill="#171717"/>
    <path d="M2 12 H40" stroke="#fff" stroke-width="1"/>
   </g>
-  <animateMotion dur="32s" repeatCount="indefinite" rotate="auto">
+  <animateMotion dur="64s" repeatCount="indefinite" rotate="auto">
    <mpath xlink:href="#racePath"/>
   </animateMotion>
  </g>
